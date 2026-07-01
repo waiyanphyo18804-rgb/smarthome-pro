@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Smart Home Automation</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: #2c3e50; font-weight: 700; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; }
+        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: 1px solid #eef2f5; }
+        .card h2 { margin-top: 0; color: #34495e; font-size: 1.4rem; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .room-sec { background: #fafbfc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #3498db; }
+        .status-text { font-weight: bold; color: #2980b9; }
+        .btn { padding: 8px 14px; font-size: 0.9rem; border: none; border-radius: 6px; cursor: pointer; color: white; margin-right: 5px; font-weight: 600; margin-top: 8px; }
+        .btn-on { background-color: #2ecc71; }
+        .btn-off { background-color: #e74c3c; }
+        .input-group { display: flex; gap: 10px; margin-top: 15px; }
+        .num-input { width: 80px; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; text-align: center; }
+        .btn-set { background-color: #3498db; color: white; border-radius: 6px; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; }
+        .progress-bar { background: #e0e0e0; border-radius: 10px; height: 20px; width: 100%; margin-top: 10px; overflow: hidden; }
+        .progress-fill { background: #3498db; height: 100%; width: 0%; text-align: center; color: white; font-size: 0.85rem; line-height: 20px; font-weight: bold; transition: width 0.5s ease; }
+        .badge { display: inline-block; padding: 6px 12px; border-radius: 30px; font-size: 0.9rem; color: white; font-weight: bold; }
+        .bg-safe { background-color: #2ecc71; }
+        .bg-danger { background-color: #e74c3c; animation: blink 1s infinite; }
+        .log-box { background: #1e272e; color: #dcdde1; padding: 15px; border-radius: 10px; height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.9rem; }
+        @keyframes blink { 50% { opacity: 0.4; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏡 Smart Home Automation Full-System</h1>
+
+    <div class="grid">
+        <div class="card">
+            <h2>💡 Room Control & Auto Systems</h2>
+
+            <div style="margin-bottom: 20px; background: #eef2f5; padding: 12px; border-radius: 8px;">
+                <p style="margin: 0;">🌡️ Current Temp: <span id="curr_temp_txt" class="status-text">28</span>°C</p>
+                <div class="input-group">
+                    <label style="line-height: 35px;">Set Fan Auto Temp (°C):</label>
+                    <input type="number" id="temp_input" class="num-input" value="30">
+                    <button class="btn-set" onclick="setThreshold()">Set</button>
+                </div>
+                <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #7f8c8d;">(သတ်မှတ်အပူချိန်: <span id="thresh_txt">30</span>°C ရောက်လျှင် ပန်ကာ အော်တိုလည်မည်)</p>
+            </div>
+
+            <div class="room-sec">
+                <strong>[ Room 1 ]</strong> — Light: <span id="r1_l_txt">OFF</span> | Fan: <span id="r1_f_txt">OFF</span><br>
+                <button class="btn btn-on" onclick="controlDevice('room1_light', 'ON')">L ON</button>
+                <button class="btn btn-off" onclick="controlDevice('room1_light', 'OFF')">L OFF</button>
+                <button class="btn btn-on" style="background-color: #34495e;" onclick="controlDevice('room1_fan', 'ON')">F ON</button>
+                <button class="btn btn-off" style="background-color: #7f8c8d;" onclick="controlDevice('room1_fan', 'OFF')">F OFF</button>
+            </div>
+
+            <div class="room-sec">
+                <strong>[ Room 2 ]</strong> — Light: <span id="r2_l_txt">OFF</span> | Fan: <span id="r2_f_txt">OFF</span><br>
+                <button class="btn btn-on" onclick="controlDevice('room2_light', 'ON')">L ON</button>
+                <button class="btn btn-off" onclick="controlDevice('room2_light', 'OFF')">L OFF</button>
+                <button class="btn btn-on" style="background-color: #34495e;" onclick="controlDevice('room2_fan', 'ON')">F ON</button>
+                <button class="btn btn-off" style="background-color: #7f8c8d;" onclick="controlDevice('room2_fan', 'OFF')">F OFF</button>
+            </div>
+
+            <div class="room-sec">
+                <strong>[ Room 3 ]</strong> — Light: <span id="r3_l_txt">OFF</span> | Fan: <span id="r3_f_txt">OFF</span><br>
+                <button class="btn btn-on" onclick="controlDevice('room3_light', 'ON')">L ON</button>
+                <button class="btn btn-off" onclick="controlDevice('room3_light', 'OFF')">L OFF</button>
+                <button class="btn btn-on" style="background-color: #34495e;" onclick="controlDevice('room3_fan', 'ON')">F ON</button>
+                <button class="btn btn-off" style="background-color: #7f8c8d;" onclick="controlDevice('room3_fan', 'OFF')">F OFF</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🌊 Environment & Safety Monitors</h2>
+
+            <div>
+                <p style="margin:0;">💧 Water Tank Level: | မော်တာ: <span id="motor_txt" class="status-text">OFF</span></p>
+                <div class="progress-bar">
+                    <div id="water_bar" class="progress-fill">0%</div>
+                </div>
+            </div>
+            <hr>
+
+            <div>
+                <p>🌧️ Weather: <span id="weather_txt" class="status-text">SUNNY</span></p>
+                <p>🌤️ Clothes Line: <span id="clothes_txt" class="status-text">OUTSIDE</span></p>
+                <button class="btn" style="background-color: #9b59b6;" onclick="controlDevice('clothes_line', 'INSIDE')">Pull INSIDE</button>
+                <button class="btn" style="background-color: #3498db;" onclick="controlDevice('clothes_line', 'OUTSIDE')">Push OUTSIDE</button>
+            </div>
+            <hr>
+
+            <div>
+                <p>🗑️ Trash Can: <span id="trash_txt" class="badge bg-safe">EMPTY</span></p>
+                <p>🚨 Gas Leak Status: <span id="gas_txt" class="badge bg-safe">SAFE</span></p>
+                <p>🔑 Front Door Lock: <span id="door_txt" class="status-text">LOCKED</span></p>
+                <button class="btn" style="background-color: #f1c40f; color:#2c3e50; width:100%;" onclick="controlDevice('door_lock', 'UNLOCKED')">🔓 Web Quick Unlock</button>
+            </div>
+        </div>
+
+        <div class="card" style="grid-column: span 1;">
+            <h2>📜 System Logs (Real-time)</h2>
+            <div id="log_container" class="log-box"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const BACKEND_URL = window.location.origin; // Local ကော Render ပေါ်မှာပါ လိပ်စာ အလိုအလျောက် ကိုက်ညီစေရန်
+
+    async function fetchStatus() {
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/status`);
+            const data = await res.json();
+
+            // အခန်းများနှင့် အပူချိန်
+            document.getElementById('curr_temp_txt').innerText = data.current_temp;
+            document.getElementById('thresh_txt').innerText = data.fan_threshold;
+            document.getElementById('r1_l_txt').innerText = data.room1_light;
+            document.getElementById('r1_f_txt').innerText = data.room1_fan;
+            document.getElementById('r2_l_txt').innerText = data.room2_light;
+            document.getElementById('r2_f_txt').innerText = data.room2_fan;
+            document.getElementById('r3_l_txt').innerText = data.room3_light;
+            document.getElementById('r3_f_txt').innerText = data.room3_fan;
+
+            // ရေတိုင်ကီ Progress Bar Update
+            const wLevel = data.water_level;
+            const wBar = document.getElementById('water_bar');
+            wBar.style.width = wLevel + '%';
+            wBar.innerText = wLevel + '%';
+            document.getElementById('motor_txt').innerText = data.water_motor;
+
+            // ရာသီဥတုနှင့် အဝတ်စင်
+            document.getElementById('weather_txt').innerText = data.weather_status;
+            document.getElementById('clothes_txt').innerText = data.clothes_line;
+            document.getElementById('door_txt').innerText = data.door_lock;
+
+            // အမှိုက်ပုံး Badge Color
+            const tBadge = document.getElementById('trash_txt');
+            tBadge.innerText = data.trash_status;
+            tBadge.className = data.trash_status === 'FULL' ? 'badge bg-danger' : 'badge bg-safe';
+
+            // ဂက်စ်အချက်ပေးစနစ် Badge Color
+            const gBadge = document.getElementById('gas_txt');
+            gBadge.innerText = data.gas_status;
+            gBadge.className = data.gas_status === 'DANGER' ? 'badge bg-danger' : 'badge bg-safe';
+
+        } catch (err) { console.error(err); }
+    }
+
+    async function controlDevice(device, action) {
+        try {
+            await fetch(`${BACKEND_URL}/api/control`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ device, action })
+            });
+            fetchStatus();
+        } catch (err) { console.error(err); }
+    }
+
+    async function setThreshold() {
+        const val = document.getElementById('temp_input').value;
+        try {
+            await fetch(`${BACKEND_URL}/api/threshold`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: val })
+            });
+            fetchStatus();
+        } catch (err) { console.error(err); }
+    }
+
+    async function fetchLogs() {
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/logs`);
+            const data = await res.json();
+            document.getElementById('log_container').innerHTML = data.map(l => `<div>[${l.time}] ${l.activity}</div>`).join('');
+        } catch (err) { console.error(err); }
+    }
+
+    setInterval(() => { fetchStatus(); fetchLogs(); }, 3000);
+    fetchStatus(); fetchLogs();
+</script>
+</body>
+</html>
